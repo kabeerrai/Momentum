@@ -6,6 +6,9 @@ let noOfTasks=document.querySelector('.number')
 let completedFilter=document.querySelector('.completed')
 let allFilter=document.querySelector('.all')
 let activeFilter=document.querySelector('.active')
+let popup=document.querySelector('.popup')
+let error=document.querySelector('.error');
+let success=document.querySelector('.success');
 
 let tasks=[{
     Index:1,
@@ -77,13 +80,35 @@ function completeTask(index){
 }
 
 function addTask(){
-    if(input.value===''){
-        console.log('enter valid task');
-    }
-    else{
+   let timeoutId;
+
+if (input.value === '') {
+    clearTimeout(timeoutId);
+
+    popup.classList.add('top');
+    error.classList.remove('hide');     // Show error
+    success.classList.add('hide');      // Hide success
+
+    timeoutId = setTimeout(() => {
+        popup.classList.remove('top');
+        error.classList.add('hide');    // Cleanup
+    }, 3000);
+} else {
+    clearTimeout(timeoutId);
+
+    popup.classList.add('top');
+    success.classList.remove('hide');  // Show success
+    error.classList.add('hide');       // Hide error
+
+    timeoutId = setTimeout(() => {
+        popup.classList.remove('top');
+        success.classList.add('hide'); // Cleanup
+    }, 3000);
     let IndexCount=1;
     tasks.forEach(()=>{
          IndexCount+=1;
+
+
     })
 
     
