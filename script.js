@@ -3,6 +3,9 @@ let allTasks=document.querySelector('.tasks')
 let input=document.querySelector('.textField')
 let addBtn=document.querySelector('.add')
 let noOfTasks=document.querySelector('.number') 
+let completedFilter=document.querySelector('.completed')
+let allFilter=document.querySelector('.all')
+let activeFilter=document.querySelector('.active')
 
 let tasks=[{
     Index:1,
@@ -27,9 +30,9 @@ function CountTasks(){
     return count;
 }
 
-function renderTasks(){
+function renderTasks(tasklist=tasks){
     let html="";
-    tasks.forEach((tasks,Index)=>{
+    tasklist.forEach((tasks,Index)=>{
         let completedClass = tasks.completed ? 'completedtask' : '';
         let completedTask = tasks.completed ? 'completedT' : '';
         let task=`<div class="task ${completedClass}">
@@ -113,7 +116,33 @@ addBtn.addEventListener('click',()=>{
 })
 
 
+completedFilter.addEventListener('click',()=>{
 
+    completedFilter.classList.add('fStyleSelect')
+    allFilter.classList.remove('fStyleSelect')
+    activeFilter.classList.remove('fStyleSelect')
+   
+    renderTasks(tasks.filter(t =>t.completed));
+})
+
+activeFilter.addEventListener('click',()=>{
+
+    completedFilter.classList.remove('fStyleSelect')
+    allFilter.classList.remove('fStyleSelect')
+    activeFilter.classList.add('fStyleSelect')
+    
+    renderTasks(tasks.filter(t =>!t.completed));
+})
+
+allFilter.addEventListener('click',()=>{
+    
+
+    completedFilter.classList.remove('fStyleSelect')
+    allFilter.classList.add('fStyleSelect')
+    activeFilter.classList.remove('fStyleSelect')
+    
+    renderTasks(tasks);
+})
 
 
 

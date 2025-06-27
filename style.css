@@ -71,7 +71,7 @@
     transition: all 0.3s ease-in-out;
 }
 
-.fStyle:hover{
+.fStyleSelect{
     .selected{
         scale: 1;
     }
