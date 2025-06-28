@@ -10,27 +10,20 @@ let popup=document.querySelector('.popup')
 let error=document.querySelector('.error');
 let success=document.querySelector('.success');
 
-let tasks=[{
-    Index:1,
-    Title:'lets get coding',
-    completed:false
-},{
-    Index:2,
-    Title:'lets get testibg',
-    completed:false
-},{
-    Index:3,
-    Title:'lets get writing',
-    completed:false
+let tasks=JSON.parse(localStorage.getItem('tasks') || '[]');
+let mode=JSON.parse(localStorage.getItem('mode'))||'';
+
+function saveToLocalStorage(){
+    localStorage.setItem('tasks',JSON.stringify(tasks));
 }
-];
+
+function trackMode(){
+    localStorage.setItem('mode',JSON.stringify(mode))
+}
 
 function CountTasks(){
-    let count=0;
-    tasks.forEach(()=>{
-        count+=1;
-    })
-    return count;
+   
+    return tasks.length;
 }
 
 function renderTasks(tasklist=tasks){
@@ -39,7 +32,7 @@ function renderTasks(tasklist=tasks){
         let completedClass = tasks.completed ? 'completedtask' : '';
         let completedTask = tasks.completed ? 'completedT' : '';
         let task=`<div class="task ${completedClass}">
-            <button class="checkBox ${completedTask}" data-index-check='${Index}'>v</button>
+            <button class="checkBox ${completedTask}" data-index-check='${Index}'>✔️</button>
             <span class="taskTitle">${tasks.Title}</span>
             <button class="delete" data-index='${Index}'>X</button>
         </div>`
@@ -75,43 +68,38 @@ function completeTask(index){
             }else if ( tasks[index].completed===true){
                 tasks[index].completed=false
             }
+            saveToLocalStorage();
             renderTasks();
             
 }
 
+let timeoutId;
 function addTask(){
-   let timeoutId;
-
 if (input.value === '') {
     clearTimeout(timeoutId);
 
     popup.classList.add('top');
-    error.classList.remove('hide');     // Show error
-    success.classList.add('hide');      // Hide success
+    error.classList.remove('hide');     
+    success.classList.add('hide');      
 
     timeoutId = setTimeout(() => {
         popup.classList.remove('top');
-        error.classList.add('hide');    // Cleanup
+        error.classList.add('hide');    
     }, 3000);
 } else {
     clearTimeout(timeoutId);
 
     popup.classList.add('top');
-    success.classList.remove('hide');  // Show success
-    error.classList.add('hide');       // Hide error
+    success.classList.remove('hide');  
+    error.classList.add('hide');       
 
     timeoutId = setTimeout(() => {
         popup.classList.remove('top');
-        success.classList.add('hide'); // Cleanup
+        success.classList.add('hide'); 
     }, 3000);
-    let IndexCount=1;
-    tasks.forEach(()=>{
-         IndexCount+=1;
+  
+    let IndexCount= tasks.length +1;
 
-
-    })
-
-    
     tasks.push(
         {   Index:IndexCount,
             Title:input.value,
@@ -119,18 +107,37 @@ if (input.value === '') {
         }
     )
     
+    saveToLocalStorage();
     renderTasks();
     }
 }
 
 
 function deleteTask(index){
+
      tasks.splice(index,1);
+     saveToLocalStorage();
      renderTasks();
 }
 
+function renderMode(){
+    let main=document.querySelector('.Main')
+    main.classList.remove('darkMode')
+    if(mode==='darkMode'){
+    main.classList.add('darkMode');
+    }
+}
+
+renderMode();
+
 dmBtn.addEventListener('click',()=>{
-    document.querySelector('.Main').classList.toggle('darkMode')
+    if(mode===""){
+    mode='darkMode'
+    }else if(mode==="darkMode"){
+    mode=""
+    }
+    renderMode();
+    trackMode();
 })
 
 renderTasks();
